@@ -245,17 +245,25 @@ module Multiplier
 
     output reg [15 : 0] product
 );
-    reg [15:0] partial_products[7:0] 
-    integer i;
-    integer d;
+    reg [7:0] Multiplicand;
+    reg [7:0] Multiplier;
+    reg [15:0] accumulator;
+    reg [3:0] count;
+
     always @(*)
     begin
-        for (i = 0 ; i < 8 ; i++) begin
-            partial_products[i] = operand_2[i] ? (operand_1 << i) : 16'b0;
+        Multiplicand = operand_1;
+        Multiplier = operand_2;
+        accumulator = 16'b0;
+        count = 4'b1000;
+        while (count > 0) begin
+            if (Multiplier[0]) begin
+                accumulator = accumulator + Multiplicand;
+            end
+            Multiplicand = Multiplicand << 1;
+            Multiplier = Multiplier >> 1;
+            count = count - 1;
         end
-
-        for (d = 0; d < 8; d++) begin
-        product = product + partial_products[i]
-        end
+        product = accumulator;
     end
 endmodule
