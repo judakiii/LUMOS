@@ -245,9 +245,15 @@ module Multiplier
 
     output reg [15 : 0] product
 );
-
+    integer i;
     always @(*)
     begin
-        product <= operand_1 * operand_2;
+        product = 16'b0;
+        for (i = 0 ; i < 8 ; i++) begin
+            if (operand_2[i])
+             begin
+                product = product + (operand_1 << i)
+             end
+        end
     end
 endmodule
