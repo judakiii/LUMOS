@@ -245,15 +245,17 @@ module Multiplier
 
     output reg [15 : 0] product
 );
+    reg [15:0] partial_products[7:0] 
     integer i;
+    integer d;
     always @(*)
     begin
-        product = 16'b0;
         for (i = 0 ; i < 8 ; i++) begin
-            if (operand_2[i])
-             begin
-                product = product + (operand_1 << i)
-             end
+            partial_products[i] = operand_2[i] ? (operand_1 << i) : 16'b0;
+        end
+
+        for (d = 0; d < 8; d++) begin
+        product = product + partial_products[i]
         end
     end
 endmodule
