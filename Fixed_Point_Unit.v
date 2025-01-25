@@ -245,24 +245,22 @@ module Multiplier
 
     output reg [15 : 0] product
 );
-    reg [7:0] Multiplicand;
-    reg [7:0] Multiplier;
     reg [15:0] accumulator;
-    reg [3:0] count;
+    reg [8:0] Multiplier;
+    integer i;
 
     always @(*)
+    accumulator = 16'b0;
+    Multiplier = {operand_2, 1'b0};
     begin
-        Multiplicand = operand_1;
-        Multiplier = operand_2;
-        accumulator = 16'b0;
-        count = 4'b1000;
-        while (count > 0) begin
-            if (Multiplier[0]) begin
-                accumulator = accumulator + Multiplicand;
+        for (i = 0; i < 8 ; i++) begin
+            if (Multiplier[1:0] == 2'b01) begin
+                accumulator = accumulator + (operand_1 << i);
             end
-            Multiplicand = Multiplicand << 1;
+            if (Multiplier[1:0] == 2'b10) begin
+                accumulator = accumulator - (operand_1 << i);
+            end
             Multiplier = Multiplier >> 1;
-            count = count - 1;
         end
         product = accumulator;
     end
